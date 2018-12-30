@@ -8,4 +8,6 @@ import Control.Monad
 import Data.List
 
 main :: IO ()
-main = print ( nodeat (-1,2) maze )
+main = do
+    args <- getArgs
+    run args

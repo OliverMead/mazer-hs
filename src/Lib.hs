@@ -1,20 +1,30 @@
-module Lib
-    where
+module Lib (run) where
 
 type Pos = (Integer, Integer)
 
-data Node = Node {  position :: Pos,
-                    up :: Maybe Pos,
-                    down :: Maybe Pos,
-                    left :: Maybe Pos,
-                    right :: Maybe Pos 
-                 } deriving (Show, Eq)
+data Node = 
+    Node {  position :: Pos,
+            up :: Maybe Pos,
+            down :: Maybe Pos,
+            left :: Maybe Pos,
+            right :: Maybe Pos 
+         } deriving (Show, Eq)
 
 minX = 0
 minY = 0
 
 maxX = 9
 maxY = 9
+
+run :: [String] -> IO ()
+run args = test
+
+test :: IO ()
+test = do
+    let at72 = nodeat (7,2) maze
+    case at72 of
+      Left msg -> putStrLn msg
+      Right node -> print node
 
 maze :: [Node]
 maze = [Node (x,y) 
@@ -33,6 +43,6 @@ printList (x:xs) = do
 nodeat :: Pos -> [Node] -> Either String Node
 -- finds first node in set of nodes at given position
 nodeat pos [] = Left ("No node at " ++ show pos)
-nodeat pos (x:xs) = if (position x == pos) 
-                        then Right x 
-                        else nodeat pos xs
+nodeat pos (x:xs) 
+  | position x == pos = Right x
+  | otherwise = nodeat pos xs
