@@ -5,22 +5,18 @@ import Data.List
 import Data.Bool.HT
 
 import Generate
-
-type Pos = (Integer, Integer)
-
-data Node = 
-    Node {  position :: Pos,
-            up :: Maybe Pos,
-            down :: Maybe Pos,
-            left :: Maybe Pos,
-            right :: Maybe Pos 
-         } deriving (Show, Eq)
+import Types
 
 run :: [String] -> IO ()
 run args = test
 
 test :: IO ()
-test = case node of
+test = case genMaze mazeData of
+         Left msg -> putStrLn msg
+         Right nodes -> showMaze nodes (4,4)
+
+test' :: IO ()
+test' = case node of
          Left msg -> putStrLn msg
          Right node -> print node
     where node = nodeat (7,2) maze
@@ -43,9 +39,21 @@ printList :: Show a => [a] -> IO ()
 printList [] = return ()
 printList (x:xs) = print x >> printList xs
 
-nodeat :: Pos -> [Node] -> Either String Node
+showMaze :: [Node] -> Position -> IO ()
+showMaze nodes (x,y) = showMazeFrom (0,0)
+    where
+        showMazeFrom :: Position -> IO ()
+        showMazeFrom (x',y') 
+          | x' > x = putStrLn "" >> showMazeFrom (0,y'+1) 
+          | y' > y = return ()
+          | otherwise = case nodeat (x',y') nodes of
+                          Left msg -> putStr "#" >> showMazeFrom (x'+1,y')
+                          Right node -> putStr " " >> showMazeFrom (x'+1, y')
+
+nodeat :: Position -> [Node] -> Either String Node
 -- finds first node in set of nodes at given position
 nodeat pos [] = Left ("No node at " ++ show pos)
 nodeat pos (x:xs) 
   | position x == pos = Right x
   | otherwise = nodeat pos xs
+
