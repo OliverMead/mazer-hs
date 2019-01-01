@@ -1,5 +1,11 @@
 module Lib (run) where
 
+import System.Directory
+import System.IO
+import Control.Monad
+import Data.List
+import Data.Bool.HT
+
 type Pos = (Integer, Integer)
 
 data Node = 
@@ -10,35 +16,32 @@ data Node =
             right :: Maybe Pos 
          } deriving (Show, Eq)
 
+run :: [String] -> IO ()
+run args = test
+
+test :: IO ()
+test = case node of
+         Left msg -> putStrLn msg
+         Right node -> print node
+    where node = nodeat (7,2) maze
+
 minX = 0
 minY = 0
 
 maxX = 9
 maxY = 9
 
-run :: [String] -> IO ()
-run args = test
-
-test :: IO ()
-test = do
-    let at72 = nodeat (7,2) maze
-    case at72 of
-      Left msg -> putStrLn msg
-      Right node -> print node
-
 maze :: [Node]
 maze = [Node (x,y) 
-             (if y+1 <= maxY then (Just (x,y+1)) else Nothing)
-             (if y-1 >= minY then (Just (x,y-1)) else Nothing)
-             (if x-1 >= minX then (Just (x-1,y)) else Nothing)
-             (if x+1 <= maxX then (Just (x+1,y)) else Nothing)
+             (y+1 <= maxY ?: (Just (x,y+1), Nothing))
+             (y-1 >= minY ?: (Just (x,y-1), Nothing))
+             (x-1 >= minX ?: (Just (x-1,y), Nothing))
+             (x+1 <= maxX ?: (Just (x+1,y), Nothing))
                | x <- [minX..maxX], y <- [minY..maxY]]
 
 printList :: Show a => [a] -> IO ()
 printList [] = return ()
-printList (x:xs) = do
-    print x
-    printList xs
+printList (x:xs) = print x >> printList xs
 
 nodeat :: Pos -> [Node] -> Either String Node
 -- finds first node in set of nodes at given position

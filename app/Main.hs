@@ -1,13 +1,7 @@
 module Main where
 
-import Lib
 import System.Environment
-import System.Directory
-import System.IO
-import Control.Monad
-import Data.List
+import Lib
 
 main :: IO ()
-main = do
-    args <- getArgs
-    run args
+main = getArgs >>= run
