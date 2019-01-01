@@ -1,10 +1,10 @@
 module Lib (run) where
 
-import System.Directory
-import System.IO
 import Control.Monad
 import Data.List
 import Data.Bool.HT
+
+import Generate
 
 type Pos = (Integer, Integer)
 
