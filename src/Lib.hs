@@ -15,6 +15,8 @@ test = case genMaze mazeData of
          Left msg -> putStrLn msg
          Right nodes -> showMaze nodes (4,4)
 
+{-
+-- some concept stuff
 test' :: IO ()
 test' = case node of
          Left msg -> putStrLn msg
@@ -23,10 +25,8 @@ test' = case node of
 
 minX = 0
 minY = 0
-
 maxX = 9
 maxY = 9
-
 maze :: [Node]
 maze = [Node (x,y) 
              (y+1 <= maxY ?: (Just (x,y+1), Nothing))
@@ -34,6 +34,8 @@ maze = [Node (x,y)
              (x-1 >= minX ?: (Just (x-1,y), Nothing))
              (x+1 <= maxX ?: (Just (x+1,y), Nothing))
                | x <- [minX..maxX], y <- [minY..maxY]]
+
+-}
 
 printList :: Show a => [a] -> IO ()
 printList [] = return ()

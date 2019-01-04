@@ -27,6 +27,8 @@ dependencies:
 library:
   source-dirs: src
 
+default-extensions: BangPatterns
+
 executables:
   mazer:
     main:                Main.hs
