@@ -13,3 +13,7 @@ branching point and not simply a path between branching points.
 
 Looping sections of maze have been allowed simply by storing a list of already checked nodes
 which must not be checked again, to avoid recursion without an exit point.
+## To Do
+- Only check nodes that are branching points as described above
+- Generate random, large mazes to solve
+- (Potentially) implement bitmap reading to load and solve B/W image based mazes
