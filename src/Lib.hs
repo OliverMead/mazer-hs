@@ -1,4 +1,4 @@
-module Lib (run) where
+module Lib (run, showMaze) where
 
 import Control.Monad
 import Data.List
@@ -6,6 +6,8 @@ import Data.Bool.HT
 
 import Generate
 import Types
+import Solve
+import Utils
 
 run :: [String] -> IO ()
 run args = test
@@ -13,35 +15,20 @@ run args = test
 test :: IO ()
 test = case genMaze mazeData of
          Left msg -> putStrLn msg
-         Right nodes -> showMaze nodes (4,4)
+         Right nodes -> showMaze nodes mazeSize
+                        >> printList (removeDeadPaths nodes mazeSize)
+                        >> showSolved nodes (removeDeadPaths nodes mazeSize) mazeSize
 
-{-
--- some concept stuff
 test' :: IO ()
-test' = case node of
+test' = case genMaze mazeData of
          Left msg -> putStrLn msg
-         Right node -> print node
-    where node = nodeat (7,2) maze
-
-minX = 0
-minY = 0
-maxX = 9
-maxY = 9
-maze :: [Node]
-maze = [Node (x,y) 
-             (y+1 <= maxY ?: (Just (x,y+1), Nothing))
-             (y-1 >= minY ?: (Just (x,y-1), Nothing))
-             (x-1 >= minX ?: (Just (x-1,y), Nothing))
-             (x+1 <= maxX ?: (Just (x+1,y), Nothing))
-               | x <- [minX..maxX], y <- [minY..maxY]]
-
--}
+         Right nodes -> showMaze nodes mazeSize
 
 printList :: Show a => [a] -> IO ()
 printList [] = return ()
 printList (x:xs) = print x >> printList xs
 
-showMaze :: [Node] -> Position -> IO ()
+showMaze :: [Node] -> MazeSize -> IO ()
 showMaze nodes (x,y) = showMazeFrom (0,0)
     where
         showMazeFrom :: Position -> IO ()
@@ -49,13 +36,7 @@ showMaze nodes (x,y) = showMazeFrom (0,0)
           | x' > x = putStrLn "" >> showMazeFrom (0,y'+1) 
           | y' > y = return ()
           | otherwise = case nodeat (x',y') nodes of
-                          Left msg -> putStr "#" >> showMazeFrom (x'+1,y')
+                          Left msg -> putStr "█" >> showMazeFrom (x'+1,y')
                           Right node -> putStr " " >> showMazeFrom (x'+1, y')
 
-nodeat :: Position -> [Node] -> Either String Node
--- finds first node in set of nodes at given position
-nodeat pos [] = Left ("No node at " ++ show pos)
-nodeat pos (x:xs) 
-  | position x == pos = Right x
-  | otherwise = nodeat pos xs
 

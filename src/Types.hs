@@ -6,6 +6,9 @@ type MazeLine = [Int]
 type MazeData = [MazeLine]
 
 type Position = (Int, Int)
+type MazeSize = Position
+
+data Direction = MyUp | MyDown | MyLeft | MyRight deriving (Eq)
 
 data Node = 
     Node {  position :: Position,
