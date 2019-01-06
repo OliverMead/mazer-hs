@@ -7,8 +7,8 @@ import Data.Bool.HT
 import Types
 
 mazeData :: MazeData
-mazeData = [ [ 1,0,1,1,1 ],
-             [ 1,0,0,0,1 ],
+mazeData = [ [ 1,1,1,1,1 ],
+             [ 0,0,1,0,1 ],
              [ 1,0,0,0,1 ],
              [ 1,0,1,0,0 ],
              [ 1,1,1,0,1 ] ]
@@ -27,10 +27,12 @@ genMaze theList = generateFrom 0
 
         nodeLine :: Position -> Either String [Node]
         nodeLine (i,j) 
-          | i >= length theList || i < 0 = Left "row out of range"
-          | j >= length (theList !! i) || j < 0 = Left "column out of range"
+          | i >= length theList || i < 0 = Left "column out of range"
+          | j >= length (theList !! i) || j < 0 = Left "row out of range"
           | otherwise = case makeNode (i, j) of
-                          Left msg -> nodeLine (i,j+1)
+                          Left msg -> case nodeLine (i,j+1) of
+                                        Left msg -> Right []
+                                        Right nodes -> Right nodes
                           Right node -> case nodeLine (i, j+1) of
                                           Left msg -> Right [node]
                                           Right nodes -> Right $ node : nodes

@@ -15,11 +15,12 @@ isDeadEnd mazeDat (x,y) fromNode (Just node) =
       (0,y') -> False
       (x',0) -> False
       (x',y') -> let  recurs = isDeadEnd mazeDat (x,y) (x',y')
-                      mbPosToMbNode mbPos = case mbPos of
-                                              Nothing -> Nothing
-                                              Just pos -> case nodeat pos mazeDat of
-                                                            Left msg -> Nothing
-                                                            Right aNode -> Just aNode
+                      mbPosToMbNode mbPos = 
+                          case mbPos of
+                            Nothing -> Nothing
+                            Just pos -> case nodeat pos mazeDat of
+                                          Left msg -> Nothing
+                                          Right aNode -> Just aNode
                  in 
                    not (x' == x || y' == y) 
                    && (up node /= Just fromNode ?: (recurs . mbPosToMbNode . up $ node, True))
@@ -27,11 +28,11 @@ isDeadEnd mazeDat (x,y) fromNode (Just node) =
                    && (left node /= Just fromNode ?: (recurs . mbPosToMbNode . left $ node, True))
                    && (right node /= Just fromNode ?: (recurs . mbPosToMbNode . right $ node, True))
 
-removeDeadPaths :: [Node] -> MazeSize -> [Node]
-removeDeadPaths [] _ = []
-removeDeadPaths nodes size = removeDuplicateNodes $ follow first MyUp []
+removeDeadPaths :: [Node] -> MazeSize -> Int -> [Node]
+removeDeadPaths [] _ _ = []
+removeDeadPaths nodes size starti = removeDuplicateNodes $ follow first MyUp []
     where 
-        first = Just . head $ nodes
+        first = Just $ nodes !! starti
         isDead dir node = isDeadEnd nodes size (position node) (mbPosToMbNode . dir $ node)
         followPos dir nod from = follow (mbPosToMbNode . dir $ nod) from
         mbPosToMbNode mbPos = case mbPos of

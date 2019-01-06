@@ -15,9 +15,10 @@ run args = test
 test :: IO ()
 test = case genMaze mazeData of
          Left msg -> putStrLn msg
-         Right nodes -> showMaze nodes mazeSize
-                        >> printList (removeDeadPaths nodes mazeSize)
-                        >> showSolved nodes (removeDeadPaths nodes mazeSize) mazeSize
+         Right nodes -> printList nodes
+                        >> showMaze nodes mazeSize
+                        >> printList (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize))
+                        >> showSolved nodes (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize)) mazeSize
 
 test' :: IO ()
 test' = case genMaze mazeData of
