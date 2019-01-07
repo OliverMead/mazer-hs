@@ -17,6 +17,7 @@ entryIndex :: [Node] -> MazeSize -> Int
 entryIndex nodes siz = entryIndexFinder nodes siz 0
     where entryIndexFinder :: [Node] -> MazeSize -> Int -> Int
           entryIndexFinder [] _ _ = 0
-          entryIndexFinder ((Node (x',y') _ _ _ _):ns) (x,y) i =  if x==x' || x==0 || y==y' || y==0
-                                                                    then i
-                                                                    else entryIndexFinder ns (x,y) (i+1)
+          entryIndexFinder ((Node (x',y') _ _ _ _):ns) (x,y) i 
+            =   if x==x' || x'==0 || y==y' || y'==0
+                    then i
+                    else entryIndexFinder ns (x,y) (i+1)

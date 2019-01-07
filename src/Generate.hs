@@ -7,12 +7,15 @@ import Data.Bool.HT
 import Types
 
 mazeData :: MazeData
-mazeData = [ [ 1,1,1,1,1 ],
-             [ 0,0,1,0,1 ],
-             [ 1,0,0,0,1 ],
-             [ 1,0,1,0,0 ],
-             [ 1,1,1,0,1 ] ]
-mazeSize = (4,4) :: MazeSize
+mazeData = [ [ 1,1,1,1,1,1,1 ],
+             [ 0,0,0,0,1,0,1 ],
+             [ 1,0,1,0,0,0,1 ],
+             [ 1,0,1,1,0,1,1 ],
+             [ 1,1,0,0,0,1,1 ],
+             [ 1,1,0,1,1,0,1 ],
+             [ 1,0,0,0,0,0,1 ],
+             [ 1,1,1,1,1,0,1 ] ]
+mazeSize = (6,7) :: MazeSize
 
 genMaze :: MazeData -> Either String [Node]
 genMaze [] = Left "Empty MazeData Provided"
