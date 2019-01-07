@@ -33,9 +33,9 @@ isDeadEnd mazeDat (x,y) fromNode' (Just node) = isDead node fromNode' 0
                         && (left node' /= Just fromNode ?: (recurs . mbPosToMbNode . left $ node', True))
                         && (right node' /= Just fromNode ?: (recurs . mbPosToMbNode . right $ node', True)) )
 
-removeDeadPaths :: [Node] -> MazeSize -> Int -> [Node]
+removeDeadPaths :: [Node] -> MazeSize -> (Int,Direction) -> [Node]
 removeDeadPaths [] _ _ = []
-removeDeadPaths nodes size starti = removeDuplicateNodes $ follow first MyLeft []
+removeDeadPaths nodes size (starti,mydir) = removeDuplicateNodes $ follow first mydir []
     where 
         first = Just $ nodes !! starti
         isDead dir node = isDeadEnd nodes size (position node) (mbPosToMbNode . dir $ node)
