@@ -16,6 +16,7 @@ test :: IO ()
 test = case genMaze mazeData of
          Left msg -> putStrLn msg
          Right nodes -> printList nodes
+                        -- >> print (isDeadEnd nodes [] mazeSize (position $ nodes !! 0) (Just $ nodes !! 1))
                         >> showMaze nodes mazeSize
                         >> printList (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize))
                         >> showSolved nodes (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize)) mazeSize
