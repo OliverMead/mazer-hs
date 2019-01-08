@@ -14,7 +14,7 @@ branching point and not simply a path between branching points.
 Looping sections of maze have been allowed simply by storing a list of already checked nodes
 which must not be checked again, to avoid recursion without an exit point.
 ## What Works?
-- Generating a maze from a 2D list of 1s for walls and 0s for paths (by creating a list of path nodes
+- Generating a maze from a 2D list of 1s for walls and 0s for paths (by creating a list of path nodes)
 - Removing dead-end nodes from the generated list
 - Automatically finding an entry-point
 - Displaying the 'solved' maze based on the difference between the new list of nodes and the original list of nodes
