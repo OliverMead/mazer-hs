@@ -8,7 +8,7 @@ This project uses the [stack](https://docs.haskellstack.org/en/stable/build_comm
 ## Implementation
 The algorithm used here checks every node to see if it is a dead end based on a traveling-from node.
 This is a much simpler algorithm for mazes than, for example, A\* or Dijkstra's.
-In terms of efficiency, the algorithm here could be improved by only checking nodes if they are a 
+In terms of efficiency, the algorithm here has been improved by only checking nodes if they are a 
 branching point and not simply a path between branching points.
 
 Looping sections of maze have been allowed simply by storing a list of already checked nodes
@@ -18,8 +18,8 @@ which must not be checked again, to avoid recursion without an exit point.
 - Removing dead-end nodes from the generated list
 - Automatically finding an entry-point
 - Displaying the 'solved' maze based on the difference between the new list of nodes and the original list of nodes
+- Only check nodes that aren't 'paths'
 ## To Do
 - Automatically find the size of the maze
-- Only check nodes that are branching points as described above
 - Generate random, large mazes to solve
 - (Potentially) implement bitmap reading to load and solve B/W image based mazes

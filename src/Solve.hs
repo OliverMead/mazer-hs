@@ -33,6 +33,54 @@ isDeadEnd mazeDat (x,y) fromNode' (Just node) = isDead node fromNode' 0
                         && (left node' /= Just fromNode ?: (recurs . mbPosToMbNode . left $ node', True))
                         && (right node' /= Just fromNode ?: (recurs . mbPosToMbNode . right $ node', True)) )
 
+isPath :: Node -> Bool
+isPath (Node _ u d l r)
+  | numnothings dirs == 2 = True
+  | otherwise = False
+    where 
+        dirs = [u, d, l, r]
+        numnothings :: [Maybe a] -> Int
+        numnothings [] = 0
+        numnothings (x:xs) = case x of
+                               Nothing -> 1 + numnothings xs
+                               Just j -> numnothings xs
+
+exitOfPath :: Node -> Direction -> Direction
+exitOfPath node dir
+  | not $ isPath node = dir
+  | otherwise = outdir
+    where 
+        outdir = theOtherDirof node dir
+        notNothing :: [Maybe a] -> Maybe Int
+        notNothing [] = Nothing
+        notNothing (x:xs) = (case x of
+                               Nothing -> case notNothing xs of
+                                            Nothing -> Nothing
+                                            Just x -> Just $ 1 + x
+                               Just j -> Just 1)
+        theOtherDirof :: Node -> Direction -> Direction
+        theOtherDirof (Node _ u d l r) dir = case dir of
+                                               MyUp -> case notNothing [d,l,r] of
+                                                         Just 1 -> MyDown
+                                                         Just 2 -> MyLeft
+                                                         Just 3 -> MyRight
+                                                         Nothing -> MyUp
+                                               MyDown -> case notNothing [u,l,r] of
+                                                           Just 1 -> MyUp
+                                                           Just 2 -> MyLeft
+                                                           Just 3 -> MyRight
+                                                           Nothing -> MyDown
+                                               MyLeft -> case notNothing [u,d,r] of
+                                                           Just 1 -> MyUp
+                                                           Just 2 -> MyDown
+                                                           Just 3 -> MyRight
+                                                           Nothing -> MyLeft
+                                               MyRight -> case notNothing [u,d,l] of
+                                                           Just 1 -> MyUp
+                                                           Just 2 -> MyDown
+                                                           Just 3 -> MyLeft
+                                                           Nothing -> MyRight
+
 removeDeadPaths :: [Node] -> MazeSize -> (Int,Direction) -> [Node]
 removeDeadPaths [] _ _ = []
 removeDeadPaths nodes size (starti,mydir) = removeDuplicateNodes $ follow first mydir []
@@ -55,7 +103,14 @@ removeDeadPaths nodes size (starti,mydir) = removeDuplicateNodes $ follow first 
         follow Nothing _ _ = []
         follow (Just node) dir blocked 
           | node `elem` blocked = []
-          | otherwise = up' ++ down' ++ left' ++ right'
+          | otherwise = if isPath node 
+                           then case exitOfPath node dir of
+                                  MyUp -> up'
+                                  MyDown -> node : down'
+                                  MyLeft -> node : left'
+                                  MyRight -> node : right'
+
+                           else up' ++ down' ++ left' ++ right'
                 where 
                     up' =   (if (dir == MyUp || isDead up node)
                                 then [node]
