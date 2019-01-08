@@ -11,11 +11,11 @@ isDeadEnd :: [Node] -> [Node] -> MazeSize -> Position -> Maybe Node -> Bool
 isDeadEnd [] _ _ _ _ = True
 isDeadEnd _ _ _ _ Nothing = True
 isDeadEnd mazeDat blocked (x,y) fromNode' (Just node) 
-  | node `elem` blocked = True
+  | node `elem` blocked = False
   | otherwise = isDead node blocked fromNode' 0
     where 
         isDead node' blocked' fromNode n 
-          | node' `elem` blocked' = True
+          | node' `elem` blocked' = False
           | otherwise =
              case position node' of
               (0,y') -> False
@@ -107,7 +107,13 @@ removeDeadPaths nodes size (starti,mydir) = removeDuplicateNodes $ follow first 
         follow Nothing _ _ = []
         follow (Just node) dir blocked 
           | node `elem` blocked = []
-          | otherwise = toblocks !! 4
+          | otherwise = if not . isPath $ node 
+                           then toblocks !! 4
+                           else node : ( case exitOfPath node dir of
+                                    MyUp -> up'
+                                    MyDown -> down'
+                                    MyLeft -> left'
+                                    MyRight -> right' )
                 where 
                     toblocks = [node : blocked,
                                 (toblocks !! 0) ++ up',
