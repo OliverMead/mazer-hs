@@ -22,4 +22,5 @@ which must not be checked again, to avoid recursion without an exit point.
 ## To Do
 - Automatically find the size of the maze
 - Generate random, large mazes to solve
+- (Potentially) implement export to bitmap functionality, for generated and solved 
 - (Potentially) implement bitmap reading to load and solve B/W image based mazes
