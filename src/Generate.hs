@@ -8,18 +8,19 @@ import Types
 
 mazeData :: MazeData
 mazeData = [ [ 1,1,1,1,1,1,1 ],
-             [ 0,0,0,0,1,0,1 ],
+             [ 0,0,1,0,0,0,1 ],
+             [ 1,0,1,0,1,0,1 ],
+             [ 1,0,0,0,1,0,1 ],
+             [ 1,0,1,1,1,0,1 ],
              [ 1,0,1,0,1,0,1 ],
              [ 1,0,1,0,0,0,1 ],
-             [ 1,1,0,0,1,0,1 ],
-             [ 1,1,0,1,1,0,1 ],
-             [ 1,0,0,0,0,0,1 ],
-             [ 1,1,1,1,1,0,1 ] ]
-mazeSize = (6,7) :: MazeSize
+             [ 1,1,1,1,0,1,1 ] ]
+mazeSize = ((length $ mazeData !! 0), length mazeData) :: MazeSize
 
-genMaze :: MazeData -> Either String [Node]
-genMaze [] = Left "Empty MazeData Provided"
-genMaze theList = generateFrom 0
+genMaze :: MazeMap -> Either String [Node]
+genMaze (_,(0,0)) = Left "Empty MazeData Provided"
+genMaze ([],_) = Left "Empty MazeData Provided"
+genMaze (theList,(x,y)) = generateFrom 0
     where
         generateFrom :: Int -> Either String [Node]
         generateFrom !pos = case nodeLine (pos,0) of
@@ -30,8 +31,8 @@ genMaze theList = generateFrom 0
 
         nodeLine :: Position -> Either String [Node]
         nodeLine (i,j) 
-          | i >= length theList || i < 0 = Left "column out of range"
-          | j >= length (theList !! i) || j < 0 = Left "row out of range"
+          | i >= y || i < 0 = Left "column out of range"
+          | j >= x || j < 0 = Left "row out of range"
           | otherwise = case makeNode (i, j) of
                           Left msg -> case nodeLine (i,j+1) of
                                         Left msg -> Right []
@@ -51,7 +52,7 @@ genMaze theList = generateFrom 0
                   | otherwise = Just (j,i-1)
 
                 down' 
-                  | i+1 >= length theList = Nothing
+                  | i+1 >= y = Nothing
                   | theList !! (i+1) !! j == 1 = Nothing
                   | otherwise = Just (j,i+1)
 
@@ -61,6 +62,6 @@ genMaze theList = generateFrom 0
                   | otherwise = Just (j-1,i)
 
                 right' 
-                  | j+1 >= length theList = Nothing
+                  | j+1 >= x = Nothing
                   | theList !! i !! (j+1) == 1 = Nothing
                   | otherwise = Just (j+1,i)

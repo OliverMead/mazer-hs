@@ -31,7 +31,7 @@ isDeadEnd mazeDat blocked (x,y) fromNode' (Just node)
                                                 Left msg -> Nothing
                                                 Right aNode -> Just aNode
                          in 
-                            if same && n/=0 then True else ( not (x' == x || y' == y) 
+                            if same && n/=0 then True else ( not (x' == x - 1 || y' == y - 1) 
                             && (up node' /= Just fromNode ?: (recurs . mbPosToMbNode . up $ node', True))
                             && (down node' /= Just fromNode ?: (recurs . mbPosToMbNode . down $ node', True))
                             && (left node' /= Just fromNode ?: (recurs . mbPosToMbNode . left $ node', True))
@@ -138,8 +138,8 @@ showSolved nodes solution (x,y) = showMazeFrom (0,0)
     where
         showMazeFrom :: Position -> IO ()
         showMazeFrom (x',y') 
-          | x' > x = putStrLn "" >> showMazeFrom (0,y'+1) 
-          | y' > y = return ()
+          | x' >= x = putStrLn "" >> showMazeFrom (0,y'+1) 
+          | y' >= y = return ()
           | otherwise = case nodeat (x',y') nodes of
                           Left msg -> putStr "█" >> showMazeFrom (x'+1,y')
                           Right node -> case nodeat (x',y') solution of

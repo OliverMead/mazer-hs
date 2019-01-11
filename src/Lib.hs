@@ -13,16 +13,16 @@ run :: [String] -> IO ()
 run args = test
 
 test :: IO ()
-test = case genMaze mazeData of
+test = case genMaze (mazeData,mazeSize) of
          Left msg -> putStrLn msg
          Right nodes -> printList nodes
-                        -- >> print (isDeadEnd nodes [] mazeSize (position $ nodes !! 0) (Just $ nodes !! 1))
+                        >> print (isDeadEnd nodes [] mazeSize (position $ nodes !! 0) (Just $ nodes !! 1))
                         >> showMaze nodes mazeSize
                         >> printList (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize))
                         >> showSolved nodes (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize)) mazeSize
 
 test' :: IO ()
-test' = case genMaze mazeData of
+test' = case genMaze (mazeData,mazeSize) of
          Left msg -> putStrLn msg
          Right nodes -> showMaze nodes mazeSize
 
@@ -35,8 +35,8 @@ showMaze nodes (x,y) = showMazeFrom (0,0)
     where
         showMazeFrom :: Position -> IO ()
         showMazeFrom (x',y') 
-          | x' > x = putStrLn "" >> showMazeFrom (0,y'+1) 
-          | y' > y = return ()
+          | x' >= x  = putStrLn "" >> showMazeFrom (0,y'+1) 
+          | y' >= y  = return ()
           | otherwise = case nodeat (x',y') nodes of
                           Left msg -> putStr "█" >> showMazeFrom (x'+1,y')
                           Right node -> putStr " " >> showMazeFrom (x'+1, y')
