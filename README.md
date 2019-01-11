@@ -19,8 +19,8 @@ which must not be checked again, to avoid recursion without an exit point.
 - Automatically finding an entry-point
 - Displaying the 'solved' maze based on the difference between the new list of nodes and the original list of nodes
 - Only check nodes that aren't 'paths'
-## To Do
 - Automatically find the size of the maze
+## To Do
 - Generate random, large mazes to solve
 - (Potentially) implement export to bitmap functionality, for generated and solved 
 - (Potentially) implement bitmap reading to load and solve B/W image based mazes
