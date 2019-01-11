@@ -13,6 +13,13 @@ branching point and not simply a path between branching points.
 
 Looping sections of maze have been allowed simply by storing a list of already checked nodes
 which must not be checked again, to avoid recursion without an exit point.
+### Defining a 'Dead' end 
+I the context of this program, a dead end is defined as a set of node from which, without going back to the 
+previous node, an exit cannot be reached. 
+
+With this definition, looping sections, no matter their location in the maze, are not removed as a dead end in
+finding the solution to the maze. I made this decision since loops create multiple paths to the exit of the maze and
+to only show include the shortest solution may not be desirable.
 ## What Works?
 - Generating a maze from a 2D list of 1s for walls and 0s for paths (by creating a list of path nodes)
 - Removing dead-end nodes from the generated list
