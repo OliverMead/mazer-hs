@@ -32,7 +32,7 @@ type MazeSize = Position
 
 type MazeMap = (MazeData,MazeSize)
 
-data Direction = DUp | DDown | DLeft | DRight deriving (Eq)
+data Direction = MyUp | MyDown | MyLeft | MyRight deriving (Eq)
 
 data Node = 
     Node {  position :: Position,
