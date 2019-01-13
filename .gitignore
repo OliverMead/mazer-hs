@@ -1,3 +1,4 @@
 .stack-work/
 mazer-hs.cabal
 *~
+*.vim

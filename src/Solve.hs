@@ -64,26 +64,26 @@ exitOfPath node dir
                                Just j -> Just 1)
         theOtherDirof :: Node -> Direction -> Direction
         theOtherDirof (Node _ u d l r) dir = case dir of
-                                               MyUp -> case notNothing [d,l,r] of
-                                                         Just 1 -> MyDown
-                                                         Just 2 -> MyLeft
-                                                         Just 3 -> MyRight
-                                                         Nothing -> MyUp
-                                               MyDown -> case notNothing [u,l,r] of
-                                                           Just 1 -> MyUp
-                                                           Just 2 -> MyLeft
-                                                           Just 3 -> MyRight
-                                                           Nothing -> MyDown
-                                               MyLeft -> case notNothing [u,d,r] of
-                                                           Just 1 -> MyUp
-                                                           Just 2 -> MyDown
-                                                           Just 3 -> MyRight
-                                                           Nothing -> MyLeft
-                                               MyRight -> case notNothing [u,d,l] of
-                                                           Just 1 -> MyUp
-                                                           Just 2 -> MyDown
-                                                           Just 3 -> MyLeft
-                                                           Nothing -> MyRight
+                                               DUp -> case notNothing [d,l,r] of
+                                                         Just 1 -> DDown
+                                                         Just 2 -> DLeft
+                                                         Just 3 -> DRight
+                                                         Nothing -> DUp
+                                               DDown -> case notNothing [u,l,r] of
+                                                           Just 1 -> DUp
+                                                           Just 2 -> DLeft
+                                                           Just 3 -> DRight
+                                                           Nothing -> DDown
+                                               DLeft -> case notNothing [u,d,r] of
+                                                           Just 1 -> DUp
+                                                           Just 2 -> DDown
+                                                           Just 3 -> DRight
+                                                           Nothing -> DLeft
+                                               DRight -> case notNothing [u,d,l] of
+                                                           Just 1 -> DUp
+                                                           Just 2 -> DDown
+                                                           Just 3 -> DLeft
+                                                           Nothing -> DRight
 
 removeDeadPaths :: [Node] -> MazeSize -> (Int,Direction) -> [Node]
 removeDeadPaths [] _ _ = []
@@ -110,28 +110,28 @@ removeDeadPaths nodes size (starti,mydir) = removeDuplicateNodes $ follow first 
           | otherwise = if not . isPath $ node 
                            then toblocks !! 4
                            else node : ( case exitOfPath node dir of
-                                    MyUp -> up'
-                                    MyDown -> down'
-                                    MyLeft -> left'
-                                    MyRight -> right' )
+                                    DUp -> up'
+                                    DDown -> down'
+                                    DLeft -> left'
+                                    DRight -> right' )
                 where 
                     toblocks = [node : blocked,
                                 (toblocks !! 0) ++ up',
                                 (toblocks !! 1) ++ down',
                                 (toblocks !! 2) ++ left',
                                 (toblocks !! 3) ++ right' ]
-                    up' =   (if (dir == MyUp || isDead (toblocks !! 0) up node)
+                    up' =   (if (dir == DUp || isDead (toblocks !! 0) up node)
                                 then []
-                                else followPos up node MyDown (toblocks !! 0)) 
-                    down' = (if (dir == MyDown || isDead (toblocks !! 1) down node)
+                                else followPos up node DDown (toblocks !! 0)) 
+                    down' = (if (dir == DDown || isDead (toblocks !! 1) down node)
                                 then []
-                                else followPos down node MyUp (toblocks !! 1)) 
-                    left' = (if (dir == MyLeft || isDead (toblocks !! 2) left node)
+                                else followPos down node DUp (toblocks !! 1)) 
+                    left' = (if (dir == DLeft || isDead (toblocks !! 2) left node)
                                 then []
-                                else followPos left node MyRight (toblocks !! 2))
-                    right'= (if (dir == MyRight || isDead (toblocks !! 3) right node)
+                                else followPos left node DRight (toblocks !! 2))
+                    right'= (if (dir == DRight || isDead (toblocks !! 3) right node)
                                 then []
-                                else followPos right node MyLeft (toblocks !! 3))
+                                else followPos right node DLeft (toblocks !! 3))
 
 showSolved :: [Node] -> [Node] -> MazeSize -> IO ()
 showSolved nodes solution (x,y) = showMazeFrom (0,0)

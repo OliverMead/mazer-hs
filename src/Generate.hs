@@ -17,7 +17,7 @@ mazeSize = ((length $ mazeData !! 0), length mazeData) :: MazeSize
 wallsToPaths :: [Direction] -> [Direction]
 wallsToPaths dirs = removeMatching dirs possible
     where 
-        possible = [MyUp, MyDown, MyLeft, MyRight]
+        possible = [DUp, DDown, DLeft, DRight]
         removeMatching :: [Direction] -> [Direction] -> [Direction]
         removeMatching notThese (dir:dirs) = if dir `elem` notThese
                                                 then removeMatching notThese dirs
@@ -47,10 +47,10 @@ walls = MazeCell -> [Direction]
 walls x
   | x < 0 = []
   | x > 15 = getWalls 15
-  | x >= 8 = MyRight : getWalls $ x - 8
-  | x >= 4 = MyLeft : getWalls $ x - 4
-  | x >= 2 = MyDown : getWalls $ x - 2
-  | otherwise = [MyUp]
+  | x >= 8 = DRight : getWalls $ x - 8
+  | x >= 4 = DLeft : getWalls $ x - 4
+  | x >= 2 = DDown : getWalls $ x - 2
+  | otherwise = [DUp]
 
 randomMaze :: MazeSize -> MazeMap
 randomMaze (x,y) = (layout, size) 
