@@ -3,65 +3,25 @@ module Generate where
 import Control.Monad
 import Data.List
 import Data.Bool.HT
-import System.Random
 
 import Types
 
 mazeData :: MazeData
-mazeData = [ [ 09,09,09 ],
-             [ 06,00,09 ],
-             [ 06,10,02 ] ]
+mazeData = [ [ 1,1,1,1,1,1,1 ],
+             [ 0,0,1,0,0,0,1 ],
+             [ 1,0,1,0,1,0,1 ],
+             [ 1,0,0,0,1,0,1 ],
+             [ 1,0,1,1,1,0,1 ],
+             [ 1,0,1,0,1,0,1 ],
+             [ 1,0,1,0,0,0,1 ],
+             [ 1,1,1,1,0,1,1 ] ]
 
 mazeSize = ((length $ mazeData !! 0), length mazeData) :: MazeSize
 
-wallsToPaths :: [Direction] -> [Direction]
-wallsToPaths dirs = removeMatching dirs possible
-    where 
-        possible = [MyUp, MyDown, MyLeft, MyRight]
-        removeMatching :: [Direction] -> [Direction] -> [Direction]
-        removeMatching notThese (dir:dirs) = if dir `elem` notThese
-                                                then removeMatching notThese dirs
-                                                else dir : removeMatching notThese dirs
-
-makeNodes :: MazeMap -> Either String [Node]
-makeNodes (_,(0,0)) = Left "Empty MazeMap Provided"
-makeNodes ([],_) = Left "Empty MazeMap Provided"
-makeNodes ([[]],_ = Left "Empty MazeMap Provided"
-makeNodes (rows,(nc,nr)) = generateFrom 0
-    where 
-        generateFrom :: Int -> Either String [Node]
-        generateFrom rowNum = case row (rowNum,0) of
-                                Left msg -> Left msg
-                                Right nodes -> case generateFrom $ rowNum+1 of
-                                                 Left msg -> Right nodes
-                                                 Right nodes' -> Right $ nodes ++ nodes'
-
-        row :: Position -> Either String [Node]
-        row (rn,cn)
-          | rn >= nr || rn < 0 = Left "column out of range"
-          | cn >= nc || cn < 0 = Left "row out of range"
-          | otherwise = makeNode (rn, cn) : row (rn,cn+1)
-
-
-walls = MazeCell -> [Direction]
-walls x
-  | x < 0 = []
-  | x > 15 = getWalls 15
-  | x >= 8 = MyRight : getWalls $ x - 8
-  | x >= 4 = MyLeft : getWalls $ x - 4
-  | x >= 2 = MyDown : getWalls $ x - 2
-  | otherwise = [MyUp]
-
-randomMaze :: MazeSize -> MazeMap
-randomMaze (x,y) = (layout, size) 
-    where
-        layout = mazeData
-        size = mazeSize
-
-genMaze' :: MazeMap -> Either String [Node]
-genMaze' (_,(0,0)) = Left "Empty MazeData Provided"
-genMaze' ([],_) = Left "Empty MazeData Provided"
-genMaze' (theList,(x,y)) = generateFrom 0
+genMaze :: MazeMap -> Either String [Node]
+genMaze (_,(0,0)) = Left "Empty MazeData Provided"
+genMaze ([],_) = Left "Empty MazeData Provided"
+genMaze (theList,(x,y)) = generateFrom 0
     where
         generateFrom :: Int -> Either String [Node]
         generateFrom !pos = case nodeLine (pos,0) of
