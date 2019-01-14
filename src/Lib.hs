@@ -13,16 +13,16 @@ run :: [String] -> IO ()
 run args = test
 
 test :: IO ()
-test = case genMaze (mazeData,mazeSize) of
+test = case makeNodes (mazeData,mazeSize) of
          Left msg -> putStrLn msg
          Right nodes -> printList nodes
-                        >> print (isDeadEnd nodes [] mazeSize (position $ nodes !! 0) (Just $ nodes !! 1))
-                        >> showMaze nodes mazeSize
-                        >> printList (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize))
-                        >> showSolved nodes (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize)) mazeSize
+                        -- >> print (isDeadEnd nodes [] mazeSize (position $ nodes !! 0) (Just $ nodes !! 1))
+                        -- >> showMaze nodes mazeSize
+                        -- >> printList (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize))
+                        -- >> showSolved nodes (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize)) mazeSize
 
 test' :: IO ()
-test' = case genMaze (mazeData,mazeSize) of
+test' = case genMaze' (mazeData,mazeSize) of
          Left msg -> putStrLn msg
          Right nodes -> showMaze nodes mazeSize
 

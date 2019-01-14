@@ -11,16 +11,18 @@ import Data.List
     other values refer to multiple walls 
     (max number 15 for this, or 14 for usable numbers)
     e.g.
-        0 = no walls
-        3 = top and bottom
-        5 = top and left wall
-        6 = bottom and left wall
-        7 = all but right walls
-        9 = top and right walls
-        10 = right and bottom walls
-        15 = all walls
-        12 = left and right walls
-        14 = bottom, left and right walls
+            0 = no walls
+         _¯ 3 = top and bottom
+        |¯  5 = top and left wall
+        |_  6 = bottom and left wall
+        |_¯ 7 = all but right walls
+         ¯| 9 = top and right walls
+         _| 10 = right and bottom walls
+        _¯| 11 = Right, top and bottom walls
+        | | 12 = left and right walls
+        |¯| 13 = right, left, top walls
+        |_| 14 = bottom, left and right walls
+        |_¯| 15 = all walls
 -}
 
 type MazeCell = Int

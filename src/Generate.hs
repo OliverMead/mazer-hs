@@ -8,9 +8,9 @@ import System.Random
 import Types
 
 mazeData :: MazeData
-mazeData = [ [ 09,09,09 ],
-             [ 06,00,09 ],
-             [ 06,10,02 ] ]
+mazeData = [ [ 09,13,13 ],
+             [ 06,00,08 ],
+             [ 07,10,02 ] ]
 
 mazeSize = ((length $ mazeData !! 0), length mazeData) :: MazeSize
 
@@ -19,6 +19,7 @@ wallsToPaths dirs = removeMatching dirs possible
     where 
         possible = [DUp, DDown, DLeft, DRight]
         removeMatching :: [Direction] -> [Direction] -> [Direction]
+        removeMatching _ [] = []
         removeMatching notThese (dir:dirs) = if dir `elem` notThese
                                                 then removeMatching notThese dirs
                                                 else dir : removeMatching notThese dirs
@@ -26,7 +27,7 @@ wallsToPaths dirs = removeMatching dirs possible
 makeNodes :: MazeMap -> Either String [Node]
 makeNodes (_,(0,0)) = Left "Empty MazeMap Provided"
 makeNodes ([],_) = Left "Empty MazeMap Provided"
-makeNodes ([[]],_ = Left "Empty MazeMap Provided"
+makeNodes ([[]],_) = Left "Empty MazeMap Provided"
 makeNodes (rows,(nc,nr)) = generateFrom 0
     where 
         generateFrom :: Int -> Either String [Node]
@@ -40,17 +41,44 @@ makeNodes (rows,(nc,nr)) = generateFrom 0
         row (rn,cn)
           | rn >= nr || rn < 0 = Left "column out of range"
           | cn >= nc || cn < 0 = Left "row out of range"
-          | otherwise = makeNode (rn, cn) : row (rn,cn+1)
+          | otherwise = case row (rn, cn+1) of 
+                          Left msg -> Right $ [makeNode (rn,cn)]
+                          Right nodes -> Right $ makeNode (rn,cn) : nodes
+        
+        makeNode :: Position -> Node
+        makeNode (i,j) = Node (j,i) up' down' left' right'
+            where 
+                cell = rows !! i !! j
+                paths = wallsToPaths $ walls cell
+                up' 
+                  | not (DUp `elem` paths)   = Nothing
+                  | i-1 < 0                  = Just (-1,-1) -- this is an opening
+                  | otherwise                = Just (j,i-1)
+
+                down' 
+                  | not (DDown `elem` paths) = Nothing
+                  | i+1 >= nr                = Just (-1,-1) -- this is an opening
+                  | otherwise                = Just (j,i+1)
+
+                left'
+                  | not (DLeft `elem` paths) = Nothing
+                  | j-1 < 0                  = Just (-1,-1) -- this is an opening
+                  | otherwise                = Just (j-1,i)
+
+                right' 
+                  | not (DRight `elem` paths)= Nothing
+                  | j+1 >= nc                = Just (-1,-1) -- this is an opening
+                  | otherwise                = Just (j+1,i)
 
 
-walls = MazeCell -> [Direction]
+walls :: MazeCell -> [Direction]
 walls x
-  | x < 0 = []
-  | x > 15 = getWalls 15
-  | x >= 8 = DRight : getWalls $ x - 8
-  | x >= 4 = DLeft : getWalls $ x - 4
-  | x >= 2 = DDown : getWalls $ x - 2
-  | otherwise = [DUp]
+  | x > 15 = walls 15
+  | x >= 8 = DRight : (walls $ x - 8)
+  | x >= 4 = DLeft : (walls $ x - 4)
+  | x >= 2 = DDown : (walls $ x - 2)
+  | x >= 1 = DUp : (walls $ x - 1)
+  | otherwise = []
 
 randomMaze :: MazeSize -> MazeMap
 randomMaze (x,y) = (layout, size) 
