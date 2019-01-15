@@ -53,8 +53,8 @@ showBlocked n
   | otherwise = "░"
   where c i = n == i
  
-showSolved :: [Node] -> [Node] -> MazeSize -> IO ()
-showSolved nodes solution (x,y) = showMazeFrom (0,0)
+printSolved :: [Node] -> [Node] -> MazeSize -> IO ()
+printSolved nodes solution (x,y) = showMazeFrom (0,0)
     where
         showMazeFrom :: Position -> IO ()
         showMazeFrom (x',y') 

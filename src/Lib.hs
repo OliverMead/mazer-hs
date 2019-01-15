@@ -26,7 +26,7 @@ test = case makeNodes (mazeData,mazeSize) of
          Right nodes -> printList nodes
                         >> printMaze nodes mazeSize
                         >> printList (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize))
-                        >> showSolved  
+                        >> printSolved  
                                nodes
                                (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize)) 
                                mazeSize
