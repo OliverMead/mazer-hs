@@ -8,9 +8,9 @@ import System.Random
 import Types
 
 mazeData :: MazeData
-mazeData = [ [ 09,13,13 ],
+mazeData = [ [ 09,05,09 ],
              [ 06,00,08 ],
-             [ 07,10,02 ] ]
+             [ 07,10,06 ] ]
 
 mazeSize = ((length $ mazeData !! 0), length mazeData) :: MazeSize
 
@@ -79,6 +79,14 @@ walls x
   | x >= 2 = DDown : (walls $ x - 2)
   | x >= 1 = DUp : (walls $ x - 1)
   | otherwise = []
+
+cell :: Node -> MazeCell
+cell (Node pos u d l r) 
+  | u == Nothing = 1 + (cell $ Node pos (Just (0,0)) d l r)
+  | d == Nothing = 2 + (cell $ Node pos u (Just (0,0)) l r)
+  | l == Nothing = 4 + (cell $ Node pos u d (Just (0,0)) r)
+  | r == Nothing = 8 + (cell $ Node pos u d l (Just (0,0)))
+  | otherwise = 0
 
 randomMaze :: MazeSize -> MazeMap
 randomMaze (x,y) = (layout, size) 
