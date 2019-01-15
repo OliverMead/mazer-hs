@@ -61,11 +61,20 @@ showSolved nodes solution (x,y) = showMazeFrom (0,0)
           | x' >= x = putStrLn "" >> showMazeFrom (0,y'+1) 
           | y' >= y = return ()
           | otherwise = case nodeat (x',y') nodes of
-                          Left msg -> putStr "█" >> showMazeFrom (x'+1,y')
+                          Left msg -> putStr " " >> showMazeFrom (x'+1,y')
                           Right node -> case nodeat (x',y') solution of
-                                          Left msg -> putStr "#" >> showMazeFrom (x'+1, y')
-                                          Right node -> putStr " " >> showMazeFrom (x'+1,y')
+                                          Left msg -> (putStr . showBlocked . cell $ node)
+                                                        >> showMazeFrom (x'+1, y')
+                                          Right node -> (putStr . showCell . cell $ node)
+                                                            >> showMazeFrom (x'+1,y')
 
+cell :: Node -> MazeCell
+cell (Node pos u d l r) 
+  | u == Nothing = 1 + (cell $ Node pos (Just (0,0)) d l r)
+  | d == Nothing = 2 + (cell $ Node pos u (Just (0,0)) l r)
+  | l == Nothing = 4 + (cell $ Node pos u d (Just (0,0)) r)
+  | r == Nothing = 8 + (cell $ Node pos u d l (Just (0,0)))
+  | otherwise = 0
 
 entryIndex :: [Node] -> MazeSize -> (Int, Direction)
 entryIndex nodes siz = entryIndexFinder nodes siz 0
