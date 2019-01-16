@@ -3,6 +3,7 @@ module Generate where
 import Control.Monad
 import Data.List
 import Data.Bool.HT
+import System.Random
 
 import Types
 
