@@ -28,7 +28,8 @@ end in finding the solution to the maze. I made this decision since loops create
 exit of the maze and to only show the shortest solution may not be desirable.
 
 ## What Works?
-- Generating a maze from a 2D list of 1s for walls and 0s for paths (by creating a list of path nodes)
+- Generating a maze from a 2D list of MazeCells (integers representing the directions of up to 4 walls) by 
+  creating a list of path nodes
 - Removing dead-end nodes from the generated list
 - Automatically finding an entry-point
 - Displaying the 'solved' maze based on the difference between the new list of nodes and the original list
