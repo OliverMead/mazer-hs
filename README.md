@@ -11,20 +11,28 @@ This is a much simpler algorithm for mazes than, for example, A\* or Dijkstra's.
 In terms of efficiency, the algorithm here has been improved by only checking nodes if they are a 
 branching point and not simply a path between branching points.
 
+Previously, each point in the input data has either represented a wall or a path. Now each point, 
+named a cell, is a path that may contain any combination of walls in the four usable directions.
+
+With this new implementation, each cell is now displayed using Unicode pipe characters (e.g. ╬). When 
+displaying dead ends, the cell is represented by a single lined equivalent.
+
 Looping sections of maze have been allowed simply by storing a list of already checked nodes
 which must not be checked again, to avoid recursion without an exit point.
 ### Defining a 'Dead' end 
-In the context of this program, a dead end is defined as a set of node from which, without going back to the 
-previous node, an exit cannot be reached. 
+In the context of this program, a dead end is defined as a set of nodes from which, without going back 
+to the previous node, an exit cannot be reached. 
 
-With this definition, looping sections, no matter their location in the maze, are not removed as a dead end in
-finding the solution to the maze. I made this decision since loops create multiple paths to the exit of the maze and
-to only show include the shortest solution may not be desirable.
+With this definition, looping sections, no matter their location in the maze, are not removed as a dead 
+end in finding the solution to the maze. I made this decision since loops create multiple paths to the 
+exit of the maze and to only show the shortest solution may not be desirable.
+
 ## What Works?
 - Generating a maze from a 2D list of 1s for walls and 0s for paths (by creating a list of path nodes)
 - Removing dead-end nodes from the generated list
 - Automatically finding an entry-point
-- Displaying the 'solved' maze based on the difference between the new list of nodes and the original list of nodes
+- Displaying the 'solved' maze based on the difference between the new list of nodes and the original list
+  of nodes
 - Only check nodes that aren't 'paths'
 - Automatically find the size of the maze
 ## To Do

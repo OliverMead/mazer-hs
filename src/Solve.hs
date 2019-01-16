@@ -14,12 +14,13 @@ isDeadEnd mazeDat blocked (x,y) fromNode' (Just node)
   | node `elem` blocked = False
   | otherwise = isDead node blocked fromNode' 0
     where 
+        
+
         isDead node' blocked' fromNode n 
           | node' `elem` blocked' = False
+          | isOpen node' = False
           | otherwise =
              case position node' of
-              (0,y') -> False
-              (x',0) -> False
               (x',y') -> let recurs mbNode = case mbNode of
                                                Nothing -> True
                                                Just new -> isDead new (node':blocked') (position node') (n+1)
@@ -31,11 +32,11 @@ isDeadEnd mazeDat blocked (x,y) fromNode' (Just node)
                                                 Left msg -> Nothing
                                                 Right aNode -> Just aNode
                          in 
-                            if same && n/=0 then True else ( not (x' == x - 1 || y' == y - 1) 
-                            && (up node' /= Just fromNode ?: (recurs . mbPosToMbNode . up $ node', True))
-                            && (down node' /= Just fromNode ?: (recurs . mbPosToMbNode . down $ node', True))
-                            && (left node' /= Just fromNode ?: (recurs . mbPosToMbNode . left $ node', True))
-                            && (right node' /= Just fromNode ?: (recurs . mbPosToMbNode . right $ node', True)) )
+                            if same && n/=0 then True  
+                            else (up node' /= Just fromNode ?: (recurs . mbPosToMbNode . up $ node', True))
+                              && (down node' /= Just fromNode ?: (recurs . mbPosToMbNode . down $ node', True))
+                              && (left node' /= Just fromNode ?: (recurs . mbPosToMbNode . left $ node', True))
+                              && (right node' /= Just fromNode ?: (recurs . mbPosToMbNode . right $ node', True))
 
 isPath :: Node -> Bool
 isPath (Node _ u d l r)
@@ -48,6 +49,13 @@ isPath (Node _ u d l r)
         numnothings (x:xs) = case x of
                                Nothing -> 1 + numnothings xs
                                Just j -> numnothings xs
+isOpen :: Node -> Bool
+isOpen (Node _ u d l r)
+  | u == Just (-1,-1) = True
+  | d == Just (-1,-1) = True
+  | l == Just (-1,-1) = True
+  | r == Just (-1,-1) = True
+  | otherwise = False
 
 exitOfPath :: Node -> Direction -> Direction
 exitOfPath node dir
@@ -120,30 +128,20 @@ removeDeadPaths nodes size (starti,mydir) = removeDuplicateNodes $ follow first 
                                 (toblocks !! 1) ++ down',
                                 (toblocks !! 2) ++ left',
                                 (toblocks !! 3) ++ right' ]
-                    up' =   (if (dir == MyUp || isDead (toblocks !! 0) up node)
+                                
+                    up' =   (if (dir == DUp 
+                                || up node == Just (-1,-1) || isDead (toblocks !! 0) up node)
                                 then []
-                                else followPos up node MyDown (toblocks !! 0)) 
-                    down' = (if (dir == MyDown || isDead (toblocks !! 1) down node)
+                                else followPos up node DDown (toblocks !! 0)) 
+                    down' = (if (dir == DDown 
+                                || down node == Just (-1,-1) || isDead (toblocks !! 1) down node)
                                 then []
-                                else followPos down node MyUp (toblocks !! 1)) 
-                    left' = (if (dir == MyLeft || isDead (toblocks !! 2) left node)
+                                else followPos down node DUp (toblocks !! 1)) 
+                    left' = (if (dir == DLeft 
+                                || left node == Just (-1,-1) || isDead (toblocks !! 2) left node)
                                 then []
-                                else followPos left node MyRight (toblocks !! 2))
-                    right'= (if (dir == MyRight || isDead (toblocks !! 3) right node)
+                                else followPos left node DRight (toblocks !! 2))
+                    right'= (if (dir == DRight 
+                                || right node == Just (-1,-1) || isDead (toblocks !! 3) right node)
                                 then []
                                 else followPos right node MyLeft (toblocks !! 3))
-
-showSolved :: [Node] -> [Node] -> MazeSize -> IO ()
-showSolved nodes solution (x,y) = showMazeFrom (0,0)
-    where
-        showMazeFrom :: Position -> IO ()
-        showMazeFrom (x',y') 
-          | x' >= x = putStrLn "" >> showMazeFrom (0,y'+1) 
-          | y' >= y = return ()
-          | otherwise = case nodeat (x',y') nodes of
-                          Left msg -> putStr "█" >> showMazeFrom (x'+1,y')
-                          Right node -> case nodeat (x',y') solution of
-                                          Left msg -> putStr "#" >> showMazeFrom (x'+1, y')
-                                          Right node -> putStr " " >> showMazeFrom (x'+1,y')
-
-
