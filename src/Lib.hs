@@ -28,8 +28,8 @@ test = case makeNodes (mazeData,mazeSize) of
                         >> printList (solve nodes mazeSize)
                         >> solvePrint nodes mazeSize
 
-solvePrint :: [Node] -> MazeSize -> IO ()
+solvePrint :: Nodes -> MazeSize -> IO ()
 solvePrint nodes size = printSolved nodes (solve nodes size) size
 
-solve :: [Node] -> MazeSize -> [Node]
+solve :: Nodes -> MazeSize -> Nodes
 solve nodes size = removeDeadPaths nodes size (entryIndex nodes size)

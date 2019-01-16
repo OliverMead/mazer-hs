@@ -9,7 +9,7 @@ import Data.List
     ╠ 4 = left wall
     ╣ 8 = right wall
     other values refer to multiple walls 
-    (max number 15 for this, or 14 for usable numbers)
+    (max number 15 for this, or 14 for usable cells)
     e.g.
         ╬ 0 = no walls
         ═ 3 = top and bottom
@@ -28,11 +28,10 @@ import Data.List
 type MazeCell = Int
 type MazeLine = [MazeCell]
 type MazeData = [MazeLine]
-
 type Position = (Int, Int)
 type MazeSize = Position
-
 type MazeMap = (MazeData,MazeSize)
+type Nodes = [Node]
 
 data Direction = DUp | DDown | DLeft | DRight deriving (Eq)
 

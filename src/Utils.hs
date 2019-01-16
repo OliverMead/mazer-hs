@@ -6,14 +6,14 @@ import Data.Bool.HT
 
 import Types
 
-nodeat :: Position -> [Node] -> Either String Node
+nodeat :: Position -> Nodes -> Either String Node
 -- finds first node in set of nodes at given position
 nodeat pos [] = Left ("No node at " ++ show pos)
 nodeat pos (x:xs) 
   | position x == pos = Right x
   | otherwise = nodeat pos xs
 
-printSolved :: [Node] -> [Node] -> MazeSize -> IO ()
+printSolved :: Nodes -> Nodes -> MazeSize -> IO ()
 printSolved nodes solution (x,y) = showMazeFrom (0,0)
     where
         showMazeFrom :: Position -> IO ()
@@ -36,9 +36,9 @@ cell (Node pos u d l r)
   | r == Nothing = 8 + (cell $ Node pos u d l (Just (0,0)))
   | otherwise = 0
 
-entryIndex :: [Node] -> MazeSize -> (Int, Direction)
+entryIndex :: Nodes -> MazeSize -> (Int, Direction)
 entryIndex nodes siz = entryIndexFinder nodes siz 0
-    where entryIndexFinder :: [Node] -> MazeSize -> Int -> (Int,Direction)
+    where entryIndexFinder :: Nodes -> MazeSize -> Int -> (Int,Direction)
           entryIndexFinder [] _ _ = (0,DUp)
           entryIndexFinder ((Node (x',y') _ _ _ _):ns) (x,y) i 
             =   if x==x' && isOpen then (i,DRight)
@@ -111,7 +111,7 @@ printList :: Show a => [a] -> IO ()
 printList [] = return ()
 printList (x:xs) = print x >> printList xs
 
-printMaze :: [Node] -> MazeSize -> IO ()
+printMaze :: Nodes -> MazeSize -> IO ()
 printMaze nodes (x,y) = showMazeFrom (0,0)
     where 
         showMazeFrom :: Position -> IO ()

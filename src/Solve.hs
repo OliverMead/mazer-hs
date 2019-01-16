@@ -7,7 +7,7 @@ import Data.Bool.HT
 import Types
 import Utils
 
-isDeadEnd :: [Node] -> [Node] -> MazeSize -> Position -> Maybe Node -> Bool
+isDeadEnd :: Nodes -> Nodes -> MazeSize -> Position -> Maybe Node -> Bool
 isDeadEnd [] _ _ _ _ = True
 isDeadEnd _ _ _ _ Nothing = True
 isDeadEnd mazeDat blocked (x,y) fromNode' (Just node) 
@@ -74,7 +74,7 @@ exitOfPath node dir
                                                            Just 3 -> DLeft
                                                            Nothing -> DRight
 
-removeDeadPaths :: [Node] -> MazeSize -> (Int,Direction) -> [Node]
+removeDeadPaths :: Nodes -> MazeSize -> (Int,Direction) -> Nodes
 removeDeadPaths [] _ _ = []
 removeDeadPaths nodes size (starti,mydir) = removeDuplicateNodes $ follow first mydir []
     where 
@@ -92,7 +92,7 @@ removeDeadPaths nodes size (starti,mydir) = removeDuplicateNodes $ follow first 
         removeDuplicateNodes (n:ns) = let newNodes = removeDuplicateNodes ns
                                       in n `elem` newNodes ?: (newNodes, n : newNodes)
         
-        follow :: Maybe Node -> Direction -> [Node] -> [Node]
+        follow :: Maybe Node -> Direction -> Nodes -> Nodes
         follow Nothing _ _ = []
         follow (Just node) dir blocked 
           | node `elem` blocked = []
