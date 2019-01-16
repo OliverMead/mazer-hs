@@ -38,25 +38,6 @@ isDeadEnd mazeDat blocked (x,y) fromNode' (Just node)
                               && (left node' /= Just fromNode ?: (recurs . mbPosToMbNode . left $ node', True))
                               && (right node' /= Just fromNode ?: (recurs . mbPosToMbNode . right $ node', True))
 
-isPath :: Node -> Bool
-isPath (Node _ u d l r)
-  | numnothings dirs == 2 = True
-  | otherwise = False
-    where 
-        dirs = [u, d, l, r]
-        numnothings :: [Maybe a] -> Int
-        numnothings [] = 0
-        numnothings (x:xs) = case x of
-                               Nothing -> 1 + numnothings xs
-                               Just j -> numnothings xs
-isOpen :: Node -> Bool
-isOpen (Node _ u d l r)
-  | u == Just (-1,-1) = True
-  | d == Just (-1,-1) = True
-  | l == Just (-1,-1) = True
-  | r == Just (-1,-1) = True
-  | otherwise = False
-
 exitOfPath :: Node -> Direction -> Direction
 exitOfPath node dir
   | not $ isPath node = dir

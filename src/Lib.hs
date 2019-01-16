@@ -30,19 +30,3 @@ test = case makeNodes (mazeData,mazeSize) of
                                nodes
                                (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize)) 
                                mazeSize
-
-printList :: Show a => [a] -> IO ()
-printList [] = return ()
-printList (x:xs) = print x >> printList xs
-
-printMaze :: [Node] -> MazeSize -> IO ()
-printMaze nodes (x,y) = showMazeFrom (0,0)
-    where 
-        showMazeFrom :: Position -> IO ()
-        showMazeFrom (x',y') 
-          | x' >= x = putStrLn "" >> showMazeFrom (0,y'+1)
-          | y' >= y = return ()
-          | otherwise = case nodeat (x',y') nodes of
-                            Left msg -> putStr " " >> showMazeFrom (x'+1,y')
-                            Right node -> (putStr . showCell . cell $ node) >> showMazeFrom (x'+1,y')
-

@@ -6,6 +6,7 @@ import Data.Bool.HT
 import System.Random
 
 import Types
+import Utils
 
 wallsToPaths :: [Direction] -> [Direction]
 wallsToPaths dirs = removeMatching dirs possible
