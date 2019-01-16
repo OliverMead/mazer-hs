@@ -79,7 +79,7 @@ cell (Node pos u d l r)
 entryIndex :: [Node] -> MazeSize -> (Int, Direction)
 entryIndex nodes siz = entryIndexFinder nodes siz 0
     where entryIndexFinder :: [Node] -> MazeSize -> Int -> (Int,Direction)
-          entryIndexFinder [] _ _ = (0,MyUp)
+          entryIndexFinder [] _ _ = (0,DUp)
           entryIndexFinder ((Node (x',y') _ _ _ _):ns) (x,y) i 
             =   if x==x' && isOpen then (i,DRight)
                    else if x'==0 && isOpen then (i,DLeft)
