@@ -25,8 +25,11 @@ test = case makeNodes (mazeData,mazeSize) of
          Left msg -> putStrLn msg
          Right nodes -> printList nodes
                         >> printMaze nodes mazeSize
-                        >> printList (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize))
-                        >> printSolved  
-                               nodes
-                               (removeDeadPaths nodes mazeSize (entryIndex nodes mazeSize)) 
-                               mazeSize
+                        >> printList (solve nodes mazeSize)
+                        >> solvePrint nodes mazeSize
+
+solvePrint :: [Node] -> MazeSize -> IO ()
+solvePrint nodes size = printSolved nodes (solve nodes size) size
+
+solve :: [Node] -> MazeSize -> [Node]
+solve nodes size = removeDeadPaths nodes size (entryIndex nodes size)
