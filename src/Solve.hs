@@ -14,8 +14,6 @@ isDeadEnd mazeDat blocked (x,y) fromNode' (Just node)
   | node `elem` blocked = False
   | otherwise = isDead node blocked fromNode' 0
     where 
-        
-
         isDead node' blocked' fromNode n 
           | node' `elem` blocked' = False
           | isOpen node' = False
@@ -96,32 +94,45 @@ removeDeadPaths nodes size (starti,mydir) = removeDuplicateNodes $ follow first 
         follow Nothing _ _ = []
         follow (Just node) dir blocked 
           | node `elem` blocked = []
-          | otherwise = if not . isPath $ node 
-                           then toblocks !! 4
-                           else node : ( case exitOfPath node dir of
-                                    DUp -> up'
-                                    DDown -> down'
-                                    DLeft -> left'
-                                    DRight -> right' )
+          | not . isPath $ node = toblocks !! 4 -- if it's not a path, return all necessary routes
+          | otherwise = node : ( case exitOfPath node dir of
+                                   -- if it is a path, only check the exit route
+                                    DUp -> if (up node == Just (-1,-1) || isDead (head toblocks) up node)
+                                              then []
+                                              else followPos up node DDown (head toblocks)
+                                    DDown -> if (down node == Just (-1,-1) || isDead (head toblocks) down node)
+                                                then []
+                                                else followPos down node DUp (head toblocks)
+                                    DLeft -> if (left node == Just (-1,-1) || isDead (head toblocks) left node)
+                                                then []
+                                                else followPos left node DRight (head toblocks)
+                                    DRight -> if (right node == Just (-1,-1) || isDead (head toblocks) right node)
+                                                 then []
+                                                 else followPos right node DLeft (head toblocks) )
                 where 
+                    -- the different blocked lists for each path
                     toblocks = [node : blocked,
                                 (toblocks !! 0) ++ up',
                                 (toblocks !! 1) ++ down',
                                 (toblocks !! 2) ++ left',
                                 (toblocks !! 3) ++ right' ]
-                                
+                    
+                    -- nodes in the path above the current node
                     up' =   (if (dir == DUp 
-                                || up node == Just (-1,-1) || isDead (toblocks !! 0) up node)
+                                || up node == Just (-1,-1) || isDead (head toblocks) up node)
                                 then []
-                                else followPos up node DDown (toblocks !! 0)) 
+                                else followPos up node DDown (head toblocks)) 
+                    -- nodes in the path bellow the current node
                     down' = (if (dir == DDown 
                                 || down node == Just (-1,-1) || isDead (toblocks !! 1) down node)
                                 then []
                                 else followPos down node DUp (toblocks !! 1)) 
+                    -- nodes in the path left of the current node
                     left' = (if (dir == DLeft 
                                 || left node == Just (-1,-1) || isDead (toblocks !! 2) left node)
                                 then []
                                 else followPos left node DRight (toblocks !! 2))
+                    -- nodes in the path right of the current node
                     right'= (if (dir == DRight 
                                 || right node == Just (-1,-1) || isDead (toblocks !! 3) right node)
                                 then []
