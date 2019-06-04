@@ -23,9 +23,9 @@ run args = test
 test :: IO ()
 test = case makeNodes (mazeData,mazeSize) of
          Left msg -> putStrLn msg
-         Right nodes -> printList nodes
-                        >> printMaze nodes mazeSize
-                        >> printList (solve nodes mazeSize)
+         -- Right nodes -> printList nodes
+         Right nodes -> printMaze nodes mazeSize
+                        -- >> printList (solve nodes mazeSize)
                         >> solvePrint nodes mazeSize
 
 solvePrint :: Nodes -> MazeSize -> IO ()
