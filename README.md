@@ -8,13 +8,13 @@ This project uses the [stack](https://docs.haskellstack.org/en/stable/build_comm
 ## Implementation
 The algorithm used here checks every node to see if it is a dead end based on a traveling-from node.
 This is a much simpler algorithm for mazes than, for example, A\* or Dijkstra's.
-In terms of efficiency, the algorithm here has been improved by only checking nodes if they are a 
+The algorithm here has been improved by only checking nodes if they are a 
 branching point and not simply a path between branching points.
 
 Previously, each point in the input data has either represented a wall or a path. Now each point, 
 named a cell, is a path that may contain any combination of walls in the four usable directions.
 
-With this new implementation, each cell is now displayed using Unicode pipe characters (e.g. ╬). When 
+With this new implementation, each cell is now displayed using Unicode box drawing characters (e.g. ╋). When 
 displaying dead ends, the cell is represented by a single lined equivalent.
 
 Looping sections of maze have been allowed simply by storing a list of already checked nodes
