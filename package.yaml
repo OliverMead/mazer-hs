@@ -22,8 +22,7 @@ description:         Please see the README on GitHub at <https://github.com/Oliv
 dependencies:
 - base >= 4.7 && < 5
 - directory
-- utility-ht
-- random
+  #- utility-ht
 
 library:
   source-dirs: src
@@ -42,6 +41,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - mazer-hs
+      #- utility-ht
 
 tests:
   mazer-hs-test:

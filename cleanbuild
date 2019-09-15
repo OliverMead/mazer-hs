@@ -1,0 +1,2 @@
+#!/bin/sh
+stack clean; stack build --profile; stack build
